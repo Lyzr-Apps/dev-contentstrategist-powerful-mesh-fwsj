@@ -2,6 +2,18 @@
   "project": "DevContent Strategist",
   "created_at": "2026-02-20",
   "agents": {
+    "trend_scout_agent": {
+      "agent_id": "6997cea0ea437a36da816328",
+      "name": "Trend Scout Agent",
+      "type": "independent",
+      "provider": "perplexity",
+      "model": "sonar-pro",
+      "has_tools": false,
+      "tools": [],
+      "voice_config": null,
+      "image_output_config": null,
+      "file_output": false
+    },
     "github_context_agent": {
       "agent_id": "6997cb0e77b90295a058d52d",
       "name": "GitHub Context Agent",
@@ -81,6 +93,7 @@
     }
   },
   "agent_ids": [
+    "6997cea0ea437a36da816328",
     "6997cb0e77b90295a058d52d",
     "6997cb0e77b90295a058d52f",
     "6997cb0ed5fa166f311285e0",

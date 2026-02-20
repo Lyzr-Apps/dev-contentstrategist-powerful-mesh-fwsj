@@ -1,0 +1,74 @@
+{
+  "agent_name": "Trend Scout Agent",
+  "agent_id": "6997cea0ea437a36da816328",
+  "description": "Scans the web in real-time to discover the latest developer trends, trending technologies, viral GitHub repos, popular frameworks, and hot topics in the developer community. Uses Perplexity built-in web search to provide up-to-the-minute trend intelligence.",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "trends_summary": "string",
+    "trending_topics": [
+      {
+        "trend_name": "string",
+        "category": "string",
+        "description": "string",
+        "why_it_matters": "string",
+        "momentum": "string",
+        "content_angle": "string",
+        "source": "string"
+      }
+    ],
+    "trending_repos": [
+      {
+        "repo_name": "string",
+        "description": "string",
+        "stars": "string",
+        "language": "string",
+        "why_trending": "string"
+      }
+    ],
+    "content_recommendations": [
+      {
+        "topic": "string",
+        "format": "string",
+        "target_audience": "string",
+        "urgency": "string",
+        "estimated_engagement": "string"
+      }
+    ],
+    "scan_timestamp": "string"
+  },
+  "example_response": {
+    "trends_summary": "sample string",
+    "trending_topics": [
+      {
+        "trend_name": "sample string",
+        "category": "sample string",
+        "description": "sample string",
+        "why_it_matters": "sample string",
+        "momentum": "sample string",
+        "content_angle": "sample string",
+        "source": "sample string"
+      }
+    ],
+    "trending_repos": [
+      {
+        "repo_name": "sample string",
+        "description": "sample string",
+        "stars": "sample string",
+        "language": "sample string",
+        "why_trending": "sample string"
+      }
+    ],
+    "content_recommendations": [
+      {
+        "topic": "sample string",
+        "format": "sample string",
+        "target_audience": "sample string",
+        "urgency": "sample string",
+        "estimated_engagement": "sample string"
+      }
+    ],
+    "scan_timestamp": "sample string"
+  }
+}

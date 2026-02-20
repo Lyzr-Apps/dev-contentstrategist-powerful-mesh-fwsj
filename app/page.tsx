@@ -15,13 +15,14 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Skeleton } from '@/components/ui/skeleton'
 import { VscGitCommit, VscGitPullRequest, VscTag, VscGithub } from 'react-icons/vsc'
 import { HiOutlineMail, HiOutlineCalendar, HiOutlineChartBar, HiOutlineDocumentText, HiOutlineLightBulb, HiOutlineBeaker } from 'react-icons/hi'
-import { FiSend, FiEdit3, FiTrendingUp, FiTarget, FiLayers, FiActivity, FiCheckCircle, FiAlertCircle, FiLoader, FiChevronRight } from 'react-icons/fi'
+import { FiSend, FiEdit3, FiTrendingUp, FiTarget, FiLayers, FiActivity, FiCheckCircle, FiAlertCircle, FiLoader, FiChevronRight, FiStar, FiExternalLink } from 'react-icons/fi'
 import { BiAnalyse } from 'react-icons/bi'
 
 // Agent IDs
 const CONTENT_STRATEGY_COORDINATOR_ID = '6997cb3dd5fa166f311285e2'
 const CONTENT_DELIVERY_AGENT_ID = '6997cb3ed223b2279bfea07a'
 const ENGAGEMENT_OPTIMIZER_AGENT_ID = '6997cb3eec13e822226888ea'
+const TREND_SCOUT_AGENT_ID = '6997cea0ea437a36da816328'
 
 // TypeScript interfaces
 interface EmailContent {
@@ -132,6 +133,40 @@ interface ActivityItem {
   message: string
   time: string
   author: string
+}
+
+interface TrendingTopic {
+  trend_name: string
+  category: string
+  description: string
+  why_it_matters: string
+  momentum: string
+  content_angle: string
+  source: string
+}
+
+interface TrendingRepo {
+  repo_name: string
+  description: string
+  stars: string
+  language: string
+  why_trending: string
+}
+
+interface ContentRecommendation {
+  topic: string
+  format: string
+  target_audience: string
+  urgency: string
+  estimated_engagement: string
+}
+
+interface TrendScoutResponse {
+  trends_summary: string
+  trending_topics: TrendingTopic[]
+  trending_repos: TrendingRepo[]
+  content_recommendations: ContentRecommendation[]
+  scan_timestamp: string
 }
 
 // Sample data
@@ -355,11 +390,12 @@ const AGENTS = [
   { id: CONTENT_STRATEGY_COORDINATOR_ID, name: 'Content Strategy Coordinator', purpose: 'Generates multi-format developer content from GitHub activity' },
   { id: CONTENT_DELIVERY_AGENT_ID, name: 'Content Delivery Agent', purpose: 'Sends emails via Gmail and creates Google Calendar events' },
   { id: ENGAGEMENT_OPTIMIZER_AGENT_ID, name: 'Engagement Optimizer', purpose: 'Analyzes engagement metrics and suggests optimizations' },
+  { id: TREND_SCOUT_AGENT_ID, name: 'Trend Scout', purpose: 'Scans real-time developer trends via Perplexity' },
 ]
 
 export default function Page() {
   // Navigation
-  const [activeScreen, setActiveScreen] = useState<'dashboard' | 'review' | 'analytics'>('dashboard')
+  const [activeScreen, setActiveScreen] = useState<'dashboard' | 'review' | 'analytics' | 'trends'>('dashboard')
 
   // Sample data toggle
   const [showSampleData, setShowSampleData] = useState(false)
@@ -392,6 +428,11 @@ export default function Page() {
   const [metricsForm, setMetricsForm] = useState({ campaign_name: '', open_rate: '', click_rate: '', shares: '', conversions: '' })
   const [analyzing, setAnalyzing] = useState(false)
   const [optimizationResult, setOptimizationResult] = useState<EngagementOptimizerResponse | null>(null)
+
+  // Trends state
+  const [trendsDomain, setTrendsDomain] = useState('')
+  const [scanningTrends, setScanningTrends] = useState(false)
+  const [trendsResult, setTrendsResult] = useState<TrendScoutResponse | null>(null)
 
   // Sync editable content when generatedContent changes
   useEffect(() => {
@@ -428,6 +469,29 @@ export default function Page() {
       setDeliveryResult(SAMPLE_DELIVERY)
       setOptimizationResult(SAMPLE_OPTIMIZATION)
       setMetricsForm({ campaign_name: 'React v4.2.0 Launch', open_rate: '42', click_rate: '6.8', shares: '150', conversions: '28' })
+      setTrendsResult({
+        trends_summary: 'The developer ecosystem in February 2026 is dominated by AI-native development tools, WebAssembly adoption for edge computing, and the rise of type-safe full-stack frameworks. Rust continues its growth in systems programming while TypeScript solidifies its position as the default for web development.',
+        trending_topics: [
+          { trend_name: 'AI Code Agents', category: 'AI & ML', description: 'Autonomous coding agents that can plan, write, test, and deploy code with minimal human intervention are seeing explosive adoption.', why_it_matters: 'Fundamentally changes the developer workflow and productivity metrics.', momentum: 'Rising', content_angle: 'Compare top AI code agents, benchmark their accuracy on real codebases, and share practical integration tips.', source: 'Hacker News, GitHub Trending, Twitter/X' },
+          { trend_name: 'WebAssembly Edge Runtime', category: 'Web Development', description: 'WASM-based edge runtimes are replacing traditional serverless for latency-critical applications.', why_it_matters: 'Enables near-native performance at the edge with any language.', momentum: 'Rising', content_angle: 'Tutorial on deploying a WASM service worker with performance benchmarks vs traditional serverless.', source: 'Reddit r/webdev, Conference talks' },
+          { trend_name: 'React Server Components 2.0', category: 'Frameworks & Libraries', description: 'The next evolution of RSC brings streaming SSR improvements and a simplified mental model.', why_it_matters: 'Reduces client bundle sizes and improves Core Web Vitals.', momentum: 'Peaking', content_angle: 'Migration guide from traditional React to RSC 2.0 with real-world performance comparisons.', source: 'React blog, Twitter/X' },
+          { trend_name: 'Bun 2.0 Release', category: 'Developer Tools', description: 'Bun 2.0 ships with native TypeScript execution, improved Node.js compatibility, and a built-in test runner.', why_it_matters: 'Challenges Node.js dominance with significantly faster execution and DX.', momentum: 'Rising', content_angle: 'Benchmark Bun 2.0 vs Node.js 22 vs Deno 2 for common developer workflows.', source: 'GitHub, Hacker News' },
+          { trend_name: 'Rust for Backend APIs', category: 'Programming Languages', description: 'Rust frameworks like Axum and Actix are seeing adoption for production API servers.', why_it_matters: 'Offers memory safety without GC pause, appealing for high-throughput services.', momentum: 'Rising', content_angle: 'Build a REST API in Rust vs Go vs TypeScript -- developer experience and performance comparison.', source: 'Reddit r/rust, Dev.to' },
+          { trend_name: 'Cursor + Claude Workflows', category: 'AI & ML', description: 'Developers are building complex automation workflows combining Cursor IDE with Claude for end-to-end development.', why_it_matters: 'Represents a paradigm shift in how developers interact with their IDE.', momentum: 'Peaking', content_angle: 'Showcase a real project built entirely with AI-assisted workflows, documenting the process and outcomes.', source: 'Twitter/X, YouTube' }
+        ],
+        trending_repos: [
+          { repo_name: 'anthropics/claude-code', description: 'CLI-based AI coding assistant that thinks and acts alongside you.', stars: '45.2k', language: 'TypeScript', why_trending: 'Revolutionary agentic coding tool gaining massive adoption.' },
+          { repo_name: 'nicbarker/clay', description: 'High performance 2D UI layout library in C.', stars: '12.8k', language: 'C', why_trending: 'Minimal footprint UI layout for embedded and game dev.' },
+          { repo_name: 'block/goose', description: 'Open-source AI developer agent that supercharges your terminal.', stars: '18.3k', language: 'Rust', why_trending: 'Alternative to proprietary coding agents with local model support.' },
+          { repo_name: 'vercel/next.js', description: 'The React framework for production.', stars: '128k', language: 'TypeScript', why_trending: 'v15.2 release with improved turbopack and RSC streaming.' }
+        ],
+        content_recommendations: [
+          { topic: 'AI Code Agent Comparison: Claude Code vs Cursor vs GitHub Copilot Workspace', format: 'Blog + Newsletter', target_audience: 'Senior developers, engineering managers', urgency: 'High', estimated_engagement: 'Very High -- controversial comparison content drives debate' },
+          { topic: 'WebAssembly at the Edge: A Practical Performance Guide', format: 'Tutorial Blog', target_audience: 'Full-stack developers, DevOps engineers', urgency: 'Medium', estimated_engagement: 'High -- practical content with benchmarks performs well' },
+          { topic: 'Rust vs Go vs TypeScript for Backend APIs in 2026', format: 'Blog + Social Thread', target_audience: 'Backend developers, architects', urgency: 'Medium', estimated_engagement: 'Very High -- language comparisons are perennial engagement drivers' }
+        ],
+        scan_timestamp: new Date().toISOString()
+      })
       setRecipientEmail('dev-team@company.com')
       setEventTitle('React v4.2.0 Content Push')
       setEventDateTime('2024-01-16T09:00')
@@ -439,6 +503,7 @@ export default function Page() {
       setGeneratedContent(null)
       setDeliveryResult(null)
       setOptimizationResult(null)
+      setTrendsResult(null)
       setMetricsForm({ campaign_name: '', open_rate: '', click_rate: '', shares: '', conversions: '' })
       setEditedEmail({ subject_line: '', preview_text: '', body: '', cta: '' })
       setEditedSocial({ twitter: '', linkedin: '', devto_title: '', devto_body: '' })
@@ -565,10 +630,49 @@ export default function Page() {
     }
   }
 
+  // Handler: Scan Trends
+  const handleScanTrends = async () => {
+    setScanningTrends(true)
+    setActiveAgentId(TREND_SCOUT_AGENT_ID)
+    setStatusMessage({ type: 'loading', text: 'Scanning latest developer trends in real-time...' })
+
+    try {
+      const message = trendsDomain.trim()
+        ? `Find the latest developer trends and trending topics in the ${trendsDomain.trim()} space. Include trending GitHub repos, hot topics from Hacker News/Reddit/Twitter, emerging technologies, and content recommendations.`
+        : `Find the latest developer trends across all areas. Include trending GitHub repos this week, hot topics from Hacker News/Reddit/Twitter, emerging technologies, major industry movements, and content recommendations for developer advocates.`
+
+      const result = await callAIAgent(message, TREND_SCOUT_AGENT_ID)
+
+      if (result.success && result?.response?.result) {
+        let data = result.response.result
+        if (typeof data === 'string') {
+          try { data = JSON.parse(data) } catch { /* keep as-is */ }
+        }
+        setTrendsResult(data as TrendScoutResponse)
+        setStatusMessage({ type: 'success', text: 'Trend scan complete! Review the latest trends below.' })
+      } else {
+        setStatusMessage({ type: 'error', text: result?.error || 'Failed to scan trends.' })
+      }
+    } catch {
+      setStatusMessage({ type: 'error', text: 'An error occurred while scanning trends.' })
+    } finally {
+      setScanningTrends(false)
+      setActiveAgentId(null)
+    }
+  }
+
+  // Handler: Generate content from a trend
+  const handleGenerateFromTrend = (trendName: string, contentAngle: string) => {
+    setContentFocus(`Trending topic: ${trendName}. Content angle: ${contentAngle}`)
+    setActiveScreen('dashboard')
+    setStatusMessage({ type: 'success', text: `Trend "${trendName}" loaded into content focus. Click Generate Content to create content around it.` })
+  }
+
   const navItems = [
     { key: 'dashboard' as const, label: 'Dashboard', icon: <FiLayers className="h-4 w-4" /> },
     { key: 'review' as const, label: 'Review & Deliver', icon: <FiSend className="h-4 w-4" /> },
     { key: 'analytics' as const, label: 'Analytics', icon: <HiOutlineChartBar className="h-4 w-4" /> },
+    { key: 'trends' as const, label: 'Trends', icon: <FiTrendingUp className="h-4 w-4" /> },
   ]
 
   const twitterCharCount = editedSocial.twitter?.length ?? 0
@@ -631,11 +735,13 @@ export default function Page() {
               {activeScreen === 'dashboard' && 'Dashboard'}
               {activeScreen === 'review' && 'Review & Deliver'}
               {activeScreen === 'analytics' && 'Analytics & Optimization'}
+              {activeScreen === 'trends' && 'Trend Scanner'}
             </h1>
             <div className="flex items-center gap-2">
               {generating && <span className="text-xs text-primary flex items-center gap-1"><FiLoader className="h-3 w-3 animate-spin" /> Generating...</span>}
               {delivering && <span className="text-xs text-primary flex items-center gap-1"><FiLoader className="h-3 w-3 animate-spin" /> Delivering...</span>}
               {analyzing && <span className="text-xs text-primary flex items-center gap-1"><FiLoader className="h-3 w-3 animate-spin" /> Analyzing...</span>}
+              {scanningTrends && <span className="text-xs text-primary flex items-center gap-1"><FiLoader className="h-3 w-3 animate-spin" /> Scanning trends...</span>}
             </div>
           </header>
 
@@ -1443,6 +1549,241 @@ export default function Page() {
                         <HiOutlineChartBar className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
                         <p className="text-sm text-muted-foreground mb-1">No analysis results yet</p>
                         <p className="text-xs text-muted-foreground">Enter campaign metrics above and click Analyze & Optimize</p>
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+              )}
+
+              {/* TRENDS SCREEN */}
+              {activeScreen === 'trends' && (
+                <div className="space-y-4">
+                  {/* Scan Controls */}
+                  <Card>
+                    <CardHeader className="p-4 pb-2">
+                      <CardTitle className="text-sm font-mono flex items-center gap-2">
+                        <FiTrendingUp className="h-4 w-4" />
+                        Trend Scanner
+                      </CardTitle>
+                      <CardDescription className="text-xs">Powered by Perplexity AI -- scans the web in real-time for developer trends</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-4 pt-2 space-y-3">
+                      <div>
+                        <Label htmlFor="trends-domain" className="text-xs text-muted-foreground">Domain / Niche (optional)</Label>
+                        <Input
+                          id="trends-domain"
+                          placeholder="e.g., AI, web development, mobile, DevOps"
+                          value={trendsDomain}
+                          onChange={(e) => setTrendsDomain(e.target.value)}
+                          className="text-sm mt-1"
+                        />
+                      </div>
+                      <Button
+                        onClick={handleScanTrends}
+                        disabled={scanningTrends}
+                        className="w-full"
+                      >
+                        {scanningTrends ? (
+                          <span className="flex items-center gap-2"><FiLoader className="h-4 w-4 animate-spin" /> Scanning...</span>
+                        ) : (
+                          <span className="flex items-center gap-2"><FiTrendingUp className="h-4 w-4" /> Scan Trends</span>
+                        )}
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  {/* Loading Skeleton */}
+                  {scanningTrends && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {[1, 2, 3, 4, 5, 6].map((i) => (
+                        <Card key={i}>
+                          <CardContent className="p-4 space-y-3">
+                            <Skeleton className="h-4 w-1/3" />
+                            <Skeleton className="h-3 w-full" />
+                            <Skeleton className="h-3 w-4/5" />
+                            <Skeleton className="h-3 w-2/3" />
+                            <Skeleton className="h-8 w-1/2 mt-2" />
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Trends Results */}
+                  {trendsResult && !scanningTrends && (
+                    <div className="space-y-4">
+                      {/* Trends Summary */}
+                      {trendsResult?.trends_summary && (
+                        <Card>
+                          <CardHeader className="p-4 pb-2">
+                            <div className="flex items-center justify-between">
+                              <CardTitle className="text-sm font-mono flex items-center gap-2">
+                                <FiTarget className="h-4 w-4" />
+                                Trends Summary
+                              </CardTitle>
+                              {trendsResult?.scan_timestamp && (
+                                <Badge variant="outline" className="text-xs font-mono">{trendsResult.scan_timestamp}</Badge>
+                              )}
+                            </div>
+                          </CardHeader>
+                          <CardContent className="p-4 pt-2">
+                            {renderMarkdown(trendsResult.trends_summary)}
+                          </CardContent>
+                        </Card>
+                      )}
+
+                      {/* Trending Topics */}
+                      {Array.isArray(trendsResult?.trending_topics) && trendsResult.trending_topics.length > 0 && (
+                        <div>
+                          <h3 className="text-sm font-mono font-semibold mb-3 flex items-center gap-2">
+                            <FiTrendingUp className="h-4 w-4" />
+                            Trending Topics
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                            {trendsResult.trending_topics.map((topic, i) => {
+                              const momentumColors: Record<string, string> = {
+                                'Rising': 'bg-accent/20 text-accent border-accent/30',
+                                'Peaking': 'bg-primary/20 text-primary border-primary/30',
+                                'Declining': 'bg-destructive/20 text-destructive border-destructive/30'
+                              }
+                              return (
+                                <Card key={i}>
+                                  <CardContent className="p-4 space-y-2">
+                                    <div className="flex items-start justify-between gap-2">
+                                      <p className="text-sm font-semibold">{topic?.trend_name ?? 'Untitled'}</p>
+                                      <span className={`inline-flex items-center px-1.5 py-0.5 text-xs border shrink-0 ${momentumColors[topic?.momentum ?? ''] || 'bg-muted text-muted-foreground border-border'}`}>{topic?.momentum ?? 'N/A'}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                      <Badge variant="secondary" className="text-xs">{topic?.category ?? 'General'}</Badge>
+                                    </div>
+                                    <p className="text-xs text-foreground">{topic?.description ?? ''}</p>
+                                    <p className="text-xs text-muted-foreground">{topic?.why_it_matters ?? ''}</p>
+                                    {topic?.content_angle && (
+                                      <div className="flex items-start gap-1.5 border border-border p-2 bg-background">
+                                        <HiOutlineLightBulb className="h-3.5 w-3.5 text-primary shrink-0 mt-0.5" />
+                                        <p className="text-xs text-foreground">{topic.content_angle}</p>
+                                      </div>
+                                    )}
+                                    {topic?.source && (
+                                      <p className="text-xs text-muted-foreground font-mono">{topic.source}</p>
+                                    )}
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      className="w-full mt-1 text-xs"
+                                      onClick={() => handleGenerateFromTrend(topic?.trend_name ?? '', topic?.content_angle ?? '')}
+                                    >
+                                      <span className="flex items-center gap-1.5"><FiEdit3 className="h-3 w-3" /> Create Content</span>
+                                    </Button>
+                                  </CardContent>
+                                </Card>
+                              )
+                            })}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Trending Repos */}
+                      {Array.isArray(trendsResult?.trending_repos) && trendsResult.trending_repos.length > 0 && (
+                        <Card>
+                          <CardHeader className="p-4 pb-2">
+                            <CardTitle className="text-sm font-mono flex items-center gap-2">
+                              <VscGithub className="h-4 w-4" />
+                              Trending Repositories
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="p-4 pt-2">
+                            <div className="overflow-x-auto">
+                              <table className="w-full text-sm">
+                                <thead>
+                                  <tr className="border-b border-border">
+                                    <th className="text-left py-2 px-2 text-xs font-mono text-muted-foreground">Repository</th>
+                                    <th className="text-left py-2 px-2 text-xs font-mono text-muted-foreground">Description</th>
+                                    <th className="text-left py-2 px-2 text-xs font-mono text-muted-foreground">Stars</th>
+                                    <th className="text-left py-2 px-2 text-xs font-mono text-muted-foreground">Language</th>
+                                    <th className="text-left py-2 px-2 text-xs font-mono text-muted-foreground">Why Trending</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {trendsResult.trending_repos.map((repo, i) => (
+                                    <tr key={i} className="border-b border-border last:border-0">
+                                      <td className="py-2 px-2 text-xs font-mono font-medium">
+                                        <span className="flex items-center gap-1.5">
+                                          <VscGithub className="h-3 w-3 shrink-0" />
+                                          {repo?.repo_name ?? 'N/A'}
+                                        </span>
+                                      </td>
+                                      <td className="py-2 px-2 text-xs text-muted-foreground max-w-[200px]">{repo?.description ?? ''}</td>
+                                      <td className="py-2 px-2 text-xs font-mono">
+                                        <span className="flex items-center gap-1">
+                                          <FiStar className="h-3 w-3 text-primary" />
+                                          {repo?.stars ?? 'N/A'}
+                                        </span>
+                                      </td>
+                                      <td className="py-2 px-2 text-xs">
+                                        <Badge variant="outline" className="text-xs">{repo?.language ?? 'N/A'}</Badge>
+                                      </td>
+                                      <td className="py-2 px-2 text-xs text-muted-foreground max-w-[250px]">{repo?.why_trending ?? ''}</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      )}
+
+                      {/* Content Recommendations */}
+                      {Array.isArray(trendsResult?.content_recommendations) && trendsResult.content_recommendations.length > 0 && (
+                        <div>
+                          <h3 className="text-sm font-mono font-semibold mb-3 flex items-center gap-2">
+                            <HiOutlineLightBulb className="h-4 w-4" />
+                            Content Recommendations
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                            {trendsResult.content_recommendations.map((rec, i) => {
+                              const urgencyColors: Record<string, string> = {
+                                'High': 'bg-destructive/20 text-destructive border-destructive/30',
+                                'Medium': 'bg-primary/20 text-primary border-primary/30',
+                                'Low': 'bg-muted text-muted-foreground border-border'
+                              }
+                              return (
+                                <Card key={i}>
+                                  <CardContent className="p-4 space-y-2">
+                                    <p className="text-sm font-semibold">{rec?.topic ?? 'Untitled'}</p>
+                                    <div className="flex items-center gap-1.5 flex-wrap">
+                                      <Badge variant="secondary" className="text-xs">{rec?.format ?? 'Content'}</Badge>
+                                      <span className={`inline-flex items-center px-1.5 py-0.5 text-xs border ${urgencyColors[rec?.urgency ?? ''] || urgencyColors.Low}`}>{rec?.urgency ?? 'N/A'} urgency</span>
+                                    </div>
+                                    <div className="text-xs space-y-1">
+                                      <p className="text-muted-foreground"><span className="font-mono">Audience:</span> {rec?.target_audience ?? 'N/A'}</p>
+                                      <p className="text-muted-foreground"><span className="font-mono">Engagement:</span> {rec?.estimated_engagement ?? 'N/A'}</p>
+                                    </div>
+                                    <Button
+                                      variant="outline"
+                                      size="sm"
+                                      className="w-full mt-1 text-xs"
+                                      onClick={() => handleGenerateFromTrend(rec?.topic ?? '', rec?.format ?? '')}
+                                    >
+                                      <span className="flex items-center gap-1.5"><FiEdit3 className="h-3 w-3" /> Create Content</span>
+                                    </Button>
+                                  </CardContent>
+                                </Card>
+                              )
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Empty state */}
+                  {!trendsResult && !scanningTrends && (
+                    <Card>
+                      <CardContent className="p-8 text-center">
+                        <FiTrendingUp className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
+                        <p className="text-sm text-muted-foreground mb-1">No trends scanned yet</p>
+                        <p className="text-xs text-muted-foreground">Optionally enter a domain above and click Scan Trends to discover what is hot in the developer world right now</p>
                       </CardContent>
                     </Card>
                   )}
