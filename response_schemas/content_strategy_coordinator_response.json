@@ -1,0 +1,62 @@
+{
+  "agent_name": "Content Strategy Coordinator",
+  "agent_id": "6997cb3dd5fa166f311285e2",
+  "description": "Orchestrates content generation workflow \u2014 routes GitHub activity data to sub-agents, coordinates content creation and formatting, aggregates final multi-format content output for review",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "executive_summary": "string",
+    "key_themes": [
+      "string"
+    ],
+    "email_content": {
+      "subject_line": "string",
+      "preview_text": "string",
+      "body": "string",
+      "cta": "string"
+    },
+    "social_content": {
+      "twitter": "string",
+      "linkedin": "string",
+      "devto_title": "string",
+      "devto_body": "string"
+    },
+    "blog_content": {
+      "title": "string",
+      "meta_description": "string",
+      "body": "string",
+      "tags": [
+        "string"
+      ]
+    },
+    "github_context_summary": "string"
+  },
+  "example_response": {
+    "executive_summary": "sample string",
+    "key_themes": [
+      "sample string"
+    ],
+    "email_content": {
+      "subject_line": "sample string",
+      "preview_text": "sample string",
+      "body": "sample string",
+      "cta": "sample string"
+    },
+    "social_content": {
+      "twitter": "sample string",
+      "linkedin": "sample string",
+      "devto_title": "sample string",
+      "devto_body": "sample string"
+    },
+    "blog_content": {
+      "title": "sample string",
+      "meta_description": "sample string",
+      "body": "sample string",
+      "tags": [
+        "sample string"
+      ]
+    },
+    "github_context_summary": "sample string"
+  }
+}

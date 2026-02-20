@@ -1,0 +1,42 @@
+{
+  "agent_name": "Content Delivery Agent",
+  "agent_id": "6997cb3ed223b2279bfea07a",
+  "description": "Sends approved email content via Gmail and creates scheduled calendar events for content publication timelines after user reviews and approves generated content",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "email_delivery": {
+      "status": "string",
+      "recipients_count": "string",
+      "subject": "string",
+      "sent_at": "string"
+    },
+    "calendar_events": [
+      {
+        "event_title": "string",
+        "date_time": "string",
+        "calendar": "string",
+        "status": "string"
+      }
+    ],
+    "delivery_summary": "string"
+  },
+  "example_response": {
+    "email_delivery": {
+      "status": "sample string",
+      "recipients_count": "sample string",
+      "subject": "sample string",
+      "sent_at": "sample string"
+    },
+    "calendar_events": [
+      {
+        "event_title": "sample string",
+        "date_time": "sample string",
+        "calendar": "sample string",
+        "status": "sample string"
+      }
+    ],
+    "delivery_summary": "sample string"
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "nodes": [
+    {"id": "input_node", "type": "Input", "label": "User Input", "nodeCategory": "input"},
+    {"id": "content_strategy_coordinator", "type": "Agent", "label": "Content Strategy Coordinator", "nodeCategory": "agent"},
+    {"id": "github_context_agent", "type": "Agent", "label": "GitHub Context Agent", "nodeCategory": "agent"},
+    {"id": "content_writer_agent", "type": "Agent", "label": "Content Writer Agent", "nodeCategory": "agent"},
+    {"id": "platform_formatter_agent", "type": "Agent", "label": "Platform Formatter Agent", "nodeCategory": "agent"},
+    {"id": "content_delivery_agent", "type": "Agent", "label": "Content Delivery Agent", "nodeCategory": "agent"},
+    {"id": "engagement_optimizer_agent", "type": "Agent", "label": "Engagement Optimizer Agent", "nodeCategory": "agent"},
+    {"id": "output_node", "type": "Output", "label": "Output", "nodeCategory": "end"}
+  ],
+  "edges": [
+    {"source": "input_node", "target": "content_strategy_coordinator"},
+    {"source": "content_strategy_coordinator", "target": "github_context_agent"},
+    {"source": "content_strategy_coordinator", "target": "content_writer_agent"},
+    {"source": "content_strategy_coordinator", "target": "platform_formatter_agent"},
+    {"source": "content_strategy_coordinator", "target": "content_delivery_agent"},
+    {"source": "content_delivery_agent", "target": "engagement_optimizer_agent"},
+    {"source": "engagement_optimizer_agent", "target": "output_node"}
+  ],
+  "agents": {
+    "content_strategy_coordinator": {
+      "agent_id": "6997cb3dd5fa166f311285e2",
+      "name": "Content Strategy Coordinator",
+      "type": "manager",
+      "model": "gpt-4o",
+      "provider": "openai",
+      "temperature": 0.3,
+      "managed_agents": ["6997cb0e77b90295a058d52d", "6997cb0e77b90295a058d52f", "6997cb0ed5fa166f311285e0"]
+    },
+    "github_context_agent": {
+      "agent_id": "6997cb0e77b90295a058d52d",
+      "name": "GitHub Context Agent",
+      "type": "sub-agent",
+      "model": "gpt-4o",
+      "provider": "openai",
+      "temperature": 0.2,
+      "tools": ["GITHUB_CREATE_A_RELEASE", "GITHUB_ACTIVITY_LIST_REPO_S_STARRED_BY_AUTHENTICATED_USER"]
+    },
+    "content_writer_agent": {
+      "agent_id": "6997cb0e77b90295a058d52f",
+      "name": "Content Writer Agent",
+      "type": "sub-agent",
+      "model": "gpt-4o",
+      "provider": "openai",
+      "temperature": 0.7,
+      "tools": []
+    },
+    "platform_formatter_agent": {
+      "agent_id": "6997cb0ed5fa166f311285e0",
+      "name": "Platform Formatter Agent",
+      "type": "sub-agent",
+      "model": "gpt-4o",
+      "provider": "openai",
+      "temperature": 0.5,
+      "tools": []
+    },
+    "content_delivery_agent": {
+      "agent_id": "6997cb3ed223b2279bfea07a",
+      "name": "Content Delivery Agent",
+      "type": "independent",
+      "model": "gpt-4o",
+      "provider": "openai",
+      "temperature": 0.2,
+      "tools": ["GMAIL_SEND_EMAIL", "GMAIL_FETCH_EMAILS", "GOOGLECALENDAR_CREATE_EVENT", "GOOGLECALENDAR_LIST_CALENDARS", "GOOGLECALENDAR_FIND_EVENT"]
+    },
+    "engagement_optimizer_agent": {
+      "agent_id": "6997cb3eec13e822226888ea",
+      "name": "Engagement Optimizer Agent",
+      "type": "independent",
+      "model": "gpt-4o",
+      "provider": "openai",
+      "temperature": 0.5,
+      "tools": []
+    }
+  }
+}

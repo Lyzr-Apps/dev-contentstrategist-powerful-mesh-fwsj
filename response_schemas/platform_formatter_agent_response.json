@@ -1,0 +1,26 @@
+{
+  "agent_name": "Platform Formatter Agent",
+  "agent_id": "6997cb0ed5fa166f311285e0",
+  "description": "Adapts raw content into platform-specific formats",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "email_format": {"subject_line": "string", "preview_text": "string", "html_body": "string", "plain_text": "string"},
+    "social_media": {
+      "twitter": {"text": "string", "hashtags": ["string"], "char_count": "string"},
+      "linkedin": {"text": "string", "hashtags": ["string"]},
+      "devto": {"title": "string", "body": "string", "tags": ["string"]}
+    },
+    "blog_format": {"title": "string", "meta_description": "string", "markdown_content": "string", "seo_keywords": ["string"]}
+  },
+  "example_response": {
+    "email_format": {"subject_line": "v2.1 Release Highlights", "preview_text": "Streaming API and 50% faster performance", "html_body": "<h1>What's New</h1>...", "plain_text": "What's New in v2.1..."},
+    "social_media": {
+      "twitter": {"text": "v2.1 is live! Streaming API + 50% perf boost.", "hashtags": ["#opensource", "#devtools"], "char_count": "180"},
+      "linkedin": {"text": "Excited to announce v2.1 with major improvements...", "hashtags": ["#engineering", "#opensource"]},
+      "devto": {"title": "v2.1: Streaming API Deep Dive", "body": "Full dev.to article...", "tags": ["webdev", "opensource", "tutorial"]}
+    },
+    "blog_format": {"title": "v2.1 Release: Streaming API", "meta_description": "Learn about the new streaming API and performance improvements in v2.1", "markdown_content": "# v2.1 Release\n\n## Streaming API\n...", "seo_keywords": ["streaming api", "performance", "release"]}
+  }
+}

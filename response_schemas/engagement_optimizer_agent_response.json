@@ -1,0 +1,88 @@
+{
+  "agent_name": "Engagement Optimizer Agent",
+  "agent_id": "6997cb3eec13e822226888ea",
+  "description": "Analyzes user-provided engagement metrics, generates optimization strategies, provides A/B testing suggestions, and predicts engagement for future content topics",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "performance_analysis": {
+      "overall_score": "string",
+      "summary": "string",
+      "top_performers": [
+        "string"
+      ],
+      "areas_for_improvement": [
+        "string"
+      ]
+    },
+    "ab_testing_suggestions": [
+      {
+        "test_name": "string",
+        "hypothesis": "string",
+        "variant_a": "string",
+        "variant_b": "string",
+        "expected_impact": "string",
+        "metric_to_track": "string"
+      }
+    ],
+    "engagement_predictions": [
+      {
+        "topic": "string",
+        "predicted_open_rate": "string",
+        "predicted_click_rate": "string",
+        "confidence": "string",
+        "reasoning": "string"
+      }
+    ],
+    "optimization_strategies": [
+      {
+        "strategy": "string",
+        "description": "string",
+        "expected_impact": "string",
+        "implementation_effort": "string",
+        "priority": "string"
+      }
+    ]
+  },
+  "example_response": {
+    "performance_analysis": {
+      "overall_score": "sample string",
+      "summary": "sample string",
+      "top_performers": [
+        "sample string"
+      ],
+      "areas_for_improvement": [
+        "sample string"
+      ]
+    },
+    "ab_testing_suggestions": [
+      {
+        "test_name": "sample string",
+        "hypothesis": "sample string",
+        "variant_a": "sample string",
+        "variant_b": "sample string",
+        "expected_impact": "sample string",
+        "metric_to_track": "sample string"
+      }
+    ],
+    "engagement_predictions": [
+      {
+        "topic": "sample string",
+        "predicted_open_rate": "sample string",
+        "predicted_click_rate": "sample string",
+        "confidence": "sample string",
+        "reasoning": "sample string"
+      }
+    ],
+    "optimization_strategies": [
+      {
+        "strategy": "sample string",
+        "description": "sample string",
+        "expected_impact": "sample string",
+        "implementation_effort": "sample string",
+        "priority": "sample string"
+      }
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "agent_name": "GitHub Context Agent",
+  "agent_id": "6997cb0e77b90295a058d52d",
+  "description": "Fetches recent repository activity including releases, commits, and PRs to extract key features and technical context for content generation",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "releases": [{"version": "string", "title": "string", "highlights": "string", "date": "string"}],
+    "commits": [{"message": "string", "author": "string", "significance": "string"}],
+    "pull_requests": [{"title": "string", "status": "string", "description": "string"}],
+    "key_features": [{"feature": "string", "marketing_angle": "string"}],
+    "summary": "string"
+  },
+  "example_response": {
+    "releases": [{"version": "v2.1.0", "title": "Performance Release", "highlights": "50% faster cold starts, new caching layer", "date": "2026-02-15"}],
+    "commits": [{"message": "feat: add streaming API support", "author": "developer", "significance": "Major new capability for real-time data processing"}],
+    "pull_requests": [{"title": "Add WebSocket support", "status": "merged", "description": "Enables real-time bidirectional communication"}],
+    "key_features": [{"feature": "Streaming API", "marketing_angle": "Process data in real-time with zero buffering delay"}],
+    "summary": "Repository shows active development with focus on performance and real-time capabilities"
+  }
+}
